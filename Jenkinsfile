@@ -8,12 +8,12 @@ pipeline {
         }
     stage('Build Container') {
       steps {
-        sh "docker build -t amanimage ."
+        bat "docker build -t amanimage ."
       }
     }
     stage('Run Docker Container') {
       steps {
-        sh "docker run -it --name amanjenkins -p 5000:5000 amanimage"
+        bat "docker run -it --name amanjenkins -p 5000:5000 amanimage"
       }
     }
   }
