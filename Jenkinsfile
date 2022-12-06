@@ -5,19 +5,19 @@ def dockerImageTag = "${projectName}:${version}"
 pipeline {
   agent any
   stages {
+    stage('Checkout') {
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Greatlearningaman/flask-calculator-app.git']]])
+            }
+        }
     stage('Build Container') {
       steps {
         sh "docker build -t ${dockerImageTag} --build-arg PYTHON_MAIN_FILE=app.py ."
       }
     }
-
-    stage('Deploy Container To Openshift') {
+    stage('Run Docker Container') {
       steps {
-        sh "oc login https://localhost:8443 --username admin --password admin --insecure-skip-tls-verify=true"
-        sh "oc project ${projectName} || oc new-project ${projectName}"
-        sh "oc delete all --selector app=${projectName} || echo 'Unable to delete all previous openshift resources'"
-        sh "oc new-app ${dockerImageTag} -l version=${version}"
-        sh "oc expose svc/${projectName}"
+        sh "docker run -it --name amanjenkins -p 5000:5000 ${dockerImageTag}"
       }
     }
   }
