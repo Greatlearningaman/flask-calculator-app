@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Run Docker Container') {
       steps {
-        bat "docker run -it --name amanjenkins -p 5000:5000 amanimage"
+        bat "docker run -d --name amanjenkins -p 5000:5000 amanimage"
       }
     }
   }
